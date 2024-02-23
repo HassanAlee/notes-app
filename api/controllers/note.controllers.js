@@ -46,4 +46,13 @@ const updateNote = async (req, res) => {
     return res.status(500).send(error);
   }
 };
-module.exports = { createNote, deleteNote, updateNote };
+// get all notes
+const getNotes = async (req, res) => {
+  try {
+    const notes = await Note.find({ userId: req.user.id });
+    return res.status(200).json(notes);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+module.exports = { createNote, deleteNote, updateNote, getNotes };
