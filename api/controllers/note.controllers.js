@@ -26,4 +26,24 @@ const deleteNote = async (req, res) => {
     res.status(500).send(error);
   }
 };
-module.exports = { createNote, deleteNote };
+// update note
+const updateNote = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const note = await Note.findById(id);
+    if (!note) {
+      res.status(404).send("Note not found");
+    }
+    if (req.user.id != note.userId) {
+      return res.status(401).send("You can only update your own note");
+    }
+    const updatedNote = await Note.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    res.status(200).json(updatedNote);
+  } catch (error) {
+    return res.status(500).send(error);
+  }
+};
+module.exports = { createNote, deleteNote, updateNote };
