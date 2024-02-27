@@ -5,7 +5,6 @@ import Home from './pages/Home'
 import Auth from './pages/Auth'
 const App = () => {
   const pathName = window.location.pathname;
-  console.log(pathName);
   return (
     <>
       {pathName != "/auth" && <Navbar />}
