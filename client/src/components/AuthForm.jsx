@@ -2,12 +2,16 @@ import { useState } from 'react'
 import { SlNotebook } from "react-icons/sl";
 import { FcGoogle } from "react-icons/fc";
 import Input from './Input';
+import { registerUser } from '../redux/actions';
+import { useDispatch, useSelector } from 'react-redux'
 const AuthForm = () => {
     const [formType, setFormType] = useState('login');
     const [formData, setFormData] = useState({ name: "", email: "", password: "" })
+    const dispatch = useDispatch()
+    const { loading } = useSelector((state) => state.authSlice)
     // submit handler
     const handleSubmit = () => {
-        console.log(formData);
+        dispatch(registerUser(formData))
     }
     return (
         <article className='flex items-center justify-center w-full'>
@@ -23,7 +27,8 @@ const AuthForm = () => {
                 <Input title={"email"} values={formData} setFormData={setFormData} />
                 <Input title={"password"} values={formData} setFormData={setFormData} />
                 <button type='submit' onClick={handleSubmit} className='capitalize p-2 w-full bg-red-500 rounded-md text-white font-black bg-purple text-2xl hover:bg-lightPurple'>{formType == "login" ? "login" : "register"}</button>
-                <h1 className='text-center mt-4'>{!(formType == "login") ? "Already registered?" : "Don't have account yet?"} <span className='capitalize text-purple underline hover:text-lightPurple hover:cursor-pointer' onClick={() => setFormType((prev) => prev == "login" ? "register" : "login")}>{!(formType == "login") ? "login" : "signup"}</span></h1>
+                {/* <h1 className='text-center mt-4'>{!(formType == "login") ? "Already registered?" : "Don't have account yet?"} <span className='capitalize text-purple underline hover:text-lightPurple hover:cursor-pointer' onClick={() => setFormType((prev) => prev == "login" ? "register" : "login")}>{!(formType == "login") ? "login" : "signup"}</span></h1> */}
+                <h1 className='text-center mt-4'>{!(formType == "login") ? "Already registered?" : "Don't have account yet?"} <span className='capitalize text-purple underline hover:text-lightPurple hover:cursor-pointer' onClick={() => setFormType((prev) => prev == "login" ? "register" : "login")}>{loading ? "Processing..." : "Proceed"}</span></h1>
             </div>
         </article>
     )
