@@ -11,7 +11,16 @@ const AuthForm = () => {
     const { loading } = useSelector((state) => state.authSlice)
     // submit handler
     const handleSubmit = () => {
-        dispatch(registerUser(formData))
+        dispatch(registerUser(formData)).then((res) => {
+            if (res.meta.requestStatus == "fulfilled") {
+                setFormData({ name: "", email: "", password: "" })
+                setTimeout(() => {
+                    setFormType("login")
+                }, 2000)
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
     }
     return (
         <article className='flex items-center justify-center w-full'>
@@ -27,8 +36,7 @@ const AuthForm = () => {
                 <Input title={"email"} values={formData} setFormData={setFormData} />
                 <Input title={"password"} values={formData} setFormData={setFormData} />
                 <button type='submit' onClick={handleSubmit} className='capitalize p-2 w-full bg-red-500 rounded-md text-white font-black bg-purple text-2xl hover:bg-lightPurple'>{formType == "login" ? "login" : "register"}</button>
-                {/* <h1 className='text-center mt-4'>{!(formType == "login") ? "Already registered?" : "Don't have account yet?"} <span className='capitalize text-purple underline hover:text-lightPurple hover:cursor-pointer' onClick={() => setFormType((prev) => prev == "login" ? "register" : "login")}>{!(formType == "login") ? "login" : "signup"}</span></h1> */}
-                <h1 className='text-center mt-4'>{!(formType == "login") ? "Already registered?" : "Don't have account yet?"} <span className='capitalize text-purple underline hover:text-lightPurple hover:cursor-pointer' onClick={() => setFormType((prev) => prev == "login" ? "register" : "login")}>{loading ? "Processing..." : "Proceed"}</span></h1>
+                <h1 className='text-center mt-4'>{!(formType == "login") ? "Already registered?" : "Don't have account yet?"} <span className='capitalize text-purple underline hover:text-lightPurple hover:cursor-pointer' onClick={() => setFormType((prev) => prev == "login" ? "register" : "login")}>{loading ? "Processing..." : formType == "login" ? "register here" : "login here"}</span></h1>
             </div>
         </article>
     )

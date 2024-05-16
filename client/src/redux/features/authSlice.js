@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { registerUser } from "../actions";
+import toast from "react-hot-toast";
 const initialState = {
   loading: false,
   error: "",
@@ -16,7 +17,7 @@ const authSlice = createSlice({
     builder.addCase(registerUser.fulfilled, (state) => {
       state.loading = false;
     });
-    builder.addCase(registerUser.rejected, (state) => {
+    builder.addCase(registerUser.rejected, (state, action) => {
       state.loading = false;
     });
   },
