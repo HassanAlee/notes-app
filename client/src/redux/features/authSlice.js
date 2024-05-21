@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { registerUser } from "../actions";
-import toast from "react-hot-toast";
+import { loginUser, registerUser } from "../actions";
 const initialState = {
   loading: false,
   error: "",
@@ -18,6 +17,16 @@ const authSlice = createSlice({
       state.loading = false;
     });
     builder.addCase(registerUser.rejected, (state, action) => {
+      state.loading = false;
+    });
+    // login user
+    builder.addCase(loginUser.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(loginUser.rejected, (state, action) => {
       state.loading = false;
     });
   },

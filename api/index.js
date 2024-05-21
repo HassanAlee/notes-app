@@ -10,7 +10,12 @@ const port = process.env.PORT;
 // middlewares
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  })
+);
 // db connection
 mongoose
   .connect(process.env.MONGO_URI)

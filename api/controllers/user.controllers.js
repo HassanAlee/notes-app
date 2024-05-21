@@ -7,7 +7,9 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hashSync(req.body.password, 10);
     const existingUser = await User.findOne({ email: req.body.email });
     if (existingUser) {
-      return res.status(409).send("User already exists");
+      return res
+        .status(409)
+        .json({ message: "User with this email already exists" });
     }
     const user = new User({ ...req.body, password: hashedPassword });
     await user.save();
@@ -21,14 +23,14 @@ const loginUser = async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
     if (!existingUser) {
-      return res.status(404).send("User does not exists");
+      return res.status(404).json({ message: "Wrong email or password" });
     }
     const validPassword = bcrypt.compareSync(
       req.body.password,
       existingUser.password
     );
     if (!validPassword) {
-      return res.status(400).send("Wrong credentials");
+      return res.status(400).json({ message: "Wrong email or password" });
     }
     const { password: pass, ...rest } = existingUser._doc;
     const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET);

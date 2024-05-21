@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { SlNotebook } from "react-icons/sl";
 import { FcGoogle } from "react-icons/fc";
 import Input from './Input';
-import { registerUser } from '../redux/actions';
+import { loginUser, registerUser } from '../redux/actions';
 import { useDispatch, useSelector } from 'react-redux'
 const AuthForm = () => {
     const [formType, setFormType] = useState('login');
@@ -11,16 +11,20 @@ const AuthForm = () => {
     const { loading } = useSelector((state) => state.authSlice)
     // submit handler
     const handleSubmit = () => {
-        dispatch(registerUser(formData)).then((res) => {
-            if (res.meta.requestStatus == "fulfilled") {
-                setFormData({ name: "", email: "", password: "" })
-                setTimeout(() => {
-                    setFormType("login")
-                }, 2000)
-            }
-        }).catch((err) => {
-            console.log(err);
-        })
+        if (formType == "register") {
+            dispatch(registerUser(formData)).then((res) => {
+                if (res.meta.requestStatus == "fulfilled") {
+                    setFormData({ name: "", email: "", password: "" })
+                    setTimeout(() => {
+                        setFormType("login")
+                    }, 2000)
+                }
+            }).catch((err) => {
+                console.log(err);
+            })
+        } else {
+            dispatch(loginUser(formData))
+        }
     }
     return (
         <article className='flex items-center justify-center w-full'>
